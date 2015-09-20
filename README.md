@@ -37,6 +37,17 @@ in Safari. Because of the commenting/uncommenting, it won't show any weather dat
 
 Once you've made the home screen button, go back into `wunderlocal.html` and uncomment Lines 17–19 and comment out Line 21, putting the file back into its original state. Now when you tap the home screen button, it'll redirect you to a weather info page for your current location. You'll probably be asked for permission for the page to access your location.
 
+## Configuration options ##
+
+There are several script configuration variables at the bottom of the script:
+
+    wukey = 'xxxxxxxxxxxxxxxx'
+
+Set this to your 16-character Wunderground API key
+
+    units = 'english' # "metric"
+
+Specify the unit to use for temperature.
 
 [1]: http://www.wunderground.com/weather/api
 [2]: https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariWebContent/GettingGeographicalLocations/GettingGeographicalLocations.html
