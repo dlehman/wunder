@@ -138,6 +138,11 @@ def wuHTML(lat, lon, wukey):
 <head>
 <meta name="viewport" content = "width = device-width" />
 <title>Weather</title>
+<link rel="apple-touch-icon" href="images/wunder_76.png">
+<link rel="apple-touch-icon" sizes="76x76" href="images/images/wunder_76.png">
+<link rel="apple-touch-icon" sizes="120x120" href="images/wunder_120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="images/wunder_152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/wunder_180.png">
 <style type="text/css">
   body { font-family: Helvetica; }
   p { margin-bottom: 0; }
