@@ -10,7 +10,7 @@ import cgi
 
 def wunder(lat, lon, wukey):
   "Return a dictionary of weather data for the given location."
-  
+
   # Day names
   d0 = datetime.today().strftime('%A')
   d1 = (datetime.today() + timedelta(days=1)).strftime('%A')
@@ -38,18 +38,18 @@ def wunder(lat, lon, wukey):
   set = '%s:%s' % (astro['sunset']['hour'], astro['sunset']['minute'])
   sunrise = datetime.strptime(rise, '%H:%M')
   sunset = datetime.strptime(set, '%H:%M')
-  
+
   # Mapping of pressure trend symbols to words.
   pstr = {'+': 'rising', '-': 'falling', '0': 'steady'}
-  
+
   # Forecast for the next 12 hours.
   today = {'name': '12 hours', 'forecast': []}
   for h in hourly[0:13:3]:
     f = [h['FCTTIME']['civil'],
          h['condition'],
-         h['temp']['english'] + '&deg;']
+         h['temp'][units] + '&deg;']
     today['forecast'].append(f)
-  
+
   # Forecasts for the next 2 days.
   tomorrow = {'name': d1, 'forecast': []}
   dayafter = {'name': d2, 'forecast': []}
@@ -59,39 +59,46 @@ def wunder(lat, lon, wukey):
        (h['FCTTIME']['hour'] in ['4', '8', '12', '16', '20']):
       f = [h['FCTTIME']['civil'],
            h['condition'],
-           h['temp']['english'] + '&deg;']
+           h['temp'][units] + '&deg;']
       tomorrow['forecast'].append(f)
 
     if (h['FCTTIME']['weekday_name'] == d2) and \
        (h['FCTTIME']['hour'] == '0'):
       f = [h['FCTTIME']['civil'],
            h['condition'],
-           h['temp']['english'] + '&deg;']
+           h['temp'][units] + '&deg;']
       tomorrow['forecast'].append(f)
 
     if (h['FCTTIME']['weekday_name'] == d2) and \
        (h['FCTTIME']['hour'] in ['4', '8', '12', '16', '20']):
       f = [h['FCTTIME']['civil'],
            h['condition'],
-           h['temp']['english'] + '&deg;']
+           h['temp'][units] + '&deg;']
       dayafter['forecast'].append(f)
 
     if (h['FCTTIME']['weekday_name'] == d3) and \
        (h['FCTTIME']['hour'] == '0'):
       f = [h['FCTTIME']['civil'],
            h['condition'],
-           h['temp']['english'] + '&deg;']
+           h['temp'][units] + '&deg;']
       dayafter['forecast'].append(f)
-  
+
+  if units == 'metric':
+    current_temp = current['temp_c']
+    feels_like = float(current['feelslike_c'])
+  else:
+    current_temp = current['temp_f']
+    feels_like = float(current['feelslike_f'])
+
   # Construct the dictionary and return it.
   wudata = {'pressure': float(current['pressure_in']),
             'ptrend': pstr[current['pressure_trend']],
-            'temp': current['temp_f'],
+            'temp': current_temp,
             'desc': current['weather'],
             'wind_dir': current['wind_dir'],
             'wind': current['wind_mph'],
             'gust': float(current['wind_gust_mph']),
-            'feel': float(current['feelslike_f']),
+            'feel': feels_like,
             'sunrise': sunrise,
             'sunset': sunset,
             'radar': radarURL,
@@ -99,11 +106,11 @@ def wunder(lat, lon, wukey):
             'tomorrow': tomorrow,
             'dayafter': dayafter}
   return wudata
-            
+
 
 def wuHTML(lat, lon, wukey):
   "Return HTML with WU data for given location."
-  
+
   d = wunder(lat, lon, wukey)
 
   # Get data ready for presentation
@@ -185,6 +192,7 @@ def wuHTML(lat, lon, wukey):
 
 # My Weather Underground key.
 wukey = 'xxxxxxxxxxxxxxxx'
+units = 'english' # or 'metric'
 
 # Get the latitude and longitude.
 form = cgi.FieldStorage()
